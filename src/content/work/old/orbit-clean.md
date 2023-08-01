@@ -1,7 +1,7 @@
 ---
 title: Orbit Clean
 publishDate: 2020-01-04 00:00:00
-img: /assets/orbit-clean.png
+img: /assets/orbit-clean.jpg
 img_alt: Pearls of silky soft white cotton, bubble up under vibrant lighting
 description: |
   We developed a virtual showcase for the softest bedding imaginable.
