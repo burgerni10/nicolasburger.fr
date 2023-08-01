@@ -1,4 +1,25 @@
-#ignore these folder
-.sass-cache
-node_modules
-.idea
+# build output
+dist/
+# generated types
+.astro/
+
+# ide repo
+.idea/
+.vscode/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
