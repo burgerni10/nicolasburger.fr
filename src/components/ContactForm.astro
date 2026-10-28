@@ -1,0 +1,201 @@
+---
+import { contact } from '../data/profile'
+import { routes, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+---
+
+<!-- Posts to Web3Forms, which forwards the message by email. Works without JS (Web3Forms shows its own confirmation page). -->
+<form
+  class="contact-form"
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  data-sending={ui.formSending[lang]}
+>
+  <input type="hidden" name="access_key" value={contact.formKey} />
+  <input type="hidden" name="subject" value={ui.formSubject[lang]} />
+  <input type="hidden" name="from_name" value="nicolasburger.fr" />
+  <!-- Honeypot: bots tick it, people never see it -->
+  <input type="checkbox" name="botcheck" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <div class="row">
+    <label>
+      <span>{ui.formName[lang]}</span>
+      <input type="text" name="name" autocomplete="name" required maxlength="100" />
+    </label>
+    <label>
+      <span>{ui.formEmail[lang]}</span>
+      <input type="email" name="email" autocomplete="email" required maxlength="200" />
+    </label>
+  </div>
+  <label>
+    <span>{ui.formMessage[lang]}</span>
+    <textarea name="message" rows="5" required maxlength="5000"></textarea>
+  </label>
+
+  <div class="actions">
+    <button type="submit">{ui.formSend[lang]}</button>
+    <p class="notice">
+      {ui.formNotice[lang]} <a href={routes.legal[lang]}>{ui.legal[lang]}</a>
+    </p>
+  </div>
+  <div class="status" role="status" aria-live="polite">
+    <p class="ok" hidden>{ui.formSuccess[lang]}</p>
+    <p class="error" hidden>
+      {ui.formError[lang]} <a href={contact.linkedin}>LinkedIn</a>.
+    </p>
+  </div>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('.contact-form')!
+  const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!
+  const ok = form.querySelector<HTMLParagraphElement>('.status .ok')!
+  const error = form.querySelector<HTMLParagraphElement>('.status .error')!
+  const label = button.textContent
+
+  const show = (message: HTMLElement | null) => {
+    ok.hidden = message !== ok
+    error.hidden = message !== error
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    button.disabled = true
+    button.textContent = form.dataset.sending!
+    show(null)
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form)
+      })
+      const result = await response.json()
+      if (!response.ok || !result.success) throw new Error(result.message)
+      form.reset()
+      show(ok)
+    } catch {
+      show(error)
+    } finally {
+      button.disabled = false
+      button.textContent = label
+    }
+  })
+</script>
+
+<style>
+  .contact-form {
+    display: grid;
+    gap: 1rem;
+    width: 100%;
+    max-width: 40rem;
+    margin-top: 0.5rem;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 1rem;
+  }
+
+  label {
+    display: grid;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  input,
+  textarea {
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--fg);
+    background: var(--bg);
+    /* --muted keeps field edges above the 3:1 non-text contrast minimum */
+    border: 1px solid var(--muted);
+    border-radius: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    transition: border-color 0.15s;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
+  input:hover,
+  textarea:hover {
+    border-color: var(--fg);
+  }
+
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 0;
+    border-color: var(--accent);
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+
+  button {
+    font: inherit;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--fg);
+    border: none;
+    border-radius: 999px;
+    padding: 0.625rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  button:hover {
+    background: var(--accent);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  .notice {
+    font-size: 0.8125rem;
+    color: var(--muted);
+    max-width: 24rem;
+  }
+
+  .status p {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--fg);
+  }
+
+  .status .ok {
+    background: var(--accent-soft);
+  }
+
+  .status .error {
+    border: 1px solid var(--accent);
+  }
+
+  .status p[hidden] {
+    display: none;
+  }
+</style>

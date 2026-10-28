@@ -1,0 +1,109 @@
+---
+import '@fontsource-variable/inter'
+import '@fontsource-variable/fraunces'
+import '../styles/global.css'
+import { getImage } from 'astro:assets'
+import profilePicture from '../assets/profile-picture.jpg'
+import ThemeToggle from '../components/ThemeToggle.astro'
+import ContactForm from '../components/ContactForm.astro'
+import { contact } from '../data/profile'
+import { routes, ui, type Lang, type Localized } from '../i18n'
+
+interface Props {
+  lang: Lang
+  title: string
+  // Same page in each language, used for the switcher and hreflang links
+  paths: Localized
+  description?: string
+  noindex?: boolean
+}
+
+const { lang, title, paths, description = ui.description[lang], noindex = false } = Astro.props
+const other: Lang = lang === 'fr' ? 'en' : 'fr'
+const canonical = new URL(paths[lang], Astro.site)
+const ogImage = await getImage({ src: profilePicture, width: 960, format: 'jpg' })
+const home = routes.home[lang]
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Nicolas Burger" />
+    <meta name="color-scheme" content="light dark" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="fr" href={new URL(paths.fr, Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(paths.en, Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(paths.fr, Astro.site)} />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Nicolas Burger" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage.src, Astro.site)} />
+    <meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'en_GB'} />
+    <meta name="twitter:card" content="summary" />
+
+    <!-- Apply the theme before first paint to avoid a flash -->
+    <script is:inline>
+      let theme = null
+      try {
+        theme = localStorage.getItem('theme')
+      } catch {}
+      document.documentElement.dataset.theme =
+        theme ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">{lang === 'fr' ? 'Aller au contenu' : 'Skip to content'}</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href={home}>Nicolas Burger</a>
+        <nav aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
+          <a href={`${home}#about`}>{ui.navAbout[lang]}</a>
+          <a href={`${home}#projects`}>{ui.navProjects[lang]}</a>
+          <a href={`${home}#experience`}>{ui.navExperience[lang]}</a>
+          <ThemeToggle lang={lang} />
+          <a class="lang" href={paths[other]} hreflang={other} lang={other} aria-label={`${ui.switchShort[lang]} – ${ui.switchLabel[lang]}`}>
+            {ui.switchShort[lang]}
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <section class="contact" aria-labelledby="contact-title">
+          <h2 id="contact-title">{ui.contactTitle[lang]}</h2>
+          <p>{ui.contactText[lang]}</p>
+          {
+            contact.formKey ? (
+              <ContactForm lang={lang} />
+            ) : (
+              <a class="contact-email" href={`mailto:${contact.email}`}>
+                {contact.email}
+              </a>
+            )
+          }
+        </section>
+        <div class="footer-bar">
+          <span>© Nicolas Burger {new Date().getFullYear()}</span>
+          <a href={contact.linkedin} rel="me">LinkedIn</a>
+          <a href={routes.legal[lang]}>{ui.legal[lang]}</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

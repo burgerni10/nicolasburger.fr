@@ -1,0 +1,319 @@
+---
+import { Image } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import Timeline from './Timeline.astro'
+import profilePicture from '../assets/profile-picture.jpg'
+import {
+  about,
+  education,
+  engagement,
+  expertise,
+  lead,
+  projects,
+  skills,
+  spokenLanguages,
+  tagline,
+  teaching,
+  themes,
+  work
+} from '../data/profile'
+import { routes, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+---
+
+<Base lang={lang} title={`Nicolas Burger · ${tagline[lang].split(' · ')[0]}`} paths={routes.home}>
+  <section class="hero container">
+    <div class="hero-text">
+      <p class="eyebrow">{tagline[lang]}</p>
+      <h1>Nicolas Burger</h1>
+      <p class="lead">{lead[lang]}</p>
+    </div>
+    <Image
+      class="portrait"
+      src={profilePicture}
+      alt={ui.photoAlt[lang]}
+      widths={[240, 480]}
+      sizes="(max-width: 44rem) 160px, 240px"
+      loading="eager"
+    />
+  </section>
+
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">{ui.navAbout[lang]}</p>
+        <h2>{lang === 'fr' ? 'Ingénieur, enseignant, citoyen curieux' : 'Engineer, teacher, curious citizen'}</h2>
+      </div>
+      <div class="prose">
+        {about.map((p) => <p set:html={p[lang]} />)}
+      </div>
+
+      <h3 class="subhead">{ui.expertise[lang]}</h3>
+      <ul class="expertise">
+        {
+          expertise.map((x) => (
+            <li>
+              <p class="kicker">{x.kicker[lang]}</p>
+              <h4>{x.title[lang]}</h4>
+              <p>{x.text[lang]}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>{ui.navProjects[lang]}</h2>
+      </div>
+      <ul class="projects">
+        {
+          projects.map((p) => (
+            <li>
+              <p class="kicker">{p.meta[lang]}</p>
+              <h3>
+                {p.url ? (
+                  <a href={p.url}>
+                    {p.name[lang]}
+                    <span class="arrow" aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  p.name[lang]
+                )}
+              </h3>
+              <p set:html={p.text[lang]} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section id="experience" class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">{ui.navExperience[lang]}</p>
+        <h2>{lang === 'fr' ? 'Expériences et formation' : 'Experience and education'}</h2>
+      </div>
+
+      <Timeline lang={lang} title={ui.work[lang]} entries={work} />
+      <Timeline lang={lang} title={ui.teaching[lang]} entries={teaching} />
+      <Timeline lang={lang} title={ui.engagement[lang]} entries={engagement} />
+      <Timeline lang={lang} title={ui.education[lang]} entries={education} />
+
+      <div class="extras">
+        <div>
+          <h3 class="subhead">{ui.skills[lang]}</h3>
+          <ul class="tags">{skills.map((s) => <li set:html={s[lang]} />)}</ul>
+        </div>
+        <div>
+          <h3 class="subhead">{ui.themes[lang]}</h3>
+          <ul class="tags">{themes.map((s) => <li>{s[lang]}</li>)}</ul>
+        </div>
+        <div>
+          <h3 class="subhead">{ui.languages[lang]}</h3>
+          <dl class="languages">
+            {
+              spokenLanguages.map((l) => (
+                <div>
+                  <dt>{l.name[lang]}</dt>
+                  <dd>{l.level[lang]}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 2rem 4rem;
+    padding-block: clamp(4rem, 12vw, 8.5rem) clamp(3.5rem, 9vw, 6rem);
+  }
+
+  .hero-text {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 46rem;
+  }
+
+  .hero .eyebrow {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 10vw, 6.25rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  .lead {
+    font-size: clamp(1.1875rem, 2.4vw, 1.4375rem);
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 38rem;
+  }
+
+  .portrait {
+    width: 240px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 50%;
+    filter: saturate(0.9);
+  }
+
+  @media (max-width: 44rem) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+
+    .portrait {
+      width: 160px;
+      grid-row: 1;
+    }
+  }
+
+  .subhead {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: clamp(2.5rem, 6vw, 4rem) 0 1.25rem;
+  }
+
+  .kicker {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .expertise,
+  .projects {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  }
+
+  .expertise {
+    gap: 2rem 3rem;
+  }
+
+  .expertise li {
+    display: grid;
+    gap: 0.375rem;
+    align-content: start;
+    padding-top: 1.25rem;
+    border-top: 2px solid var(--fg);
+  }
+
+  .expertise h4 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .expertise p:last-child {
+    color: var(--muted);
+    font-size: 0.9688rem;
+  }
+
+  .projects {
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .projects li {
+    display: grid;
+    gap: 0.625rem;
+    align-content: start;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    background: var(--bg);
+  }
+
+  .projects h3 {
+    font-size: 1.625rem;
+  }
+
+  .projects h3 a {
+    text-decoration: none;
+  }
+
+  .projects h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .projects li:has(a) {
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .projects li:has(a):hover {
+    background: var(--surface);
+  }
+
+  .arrow {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.75em;
+    margin-left: 0.25em;
+    color: var(--accent);
+    transition: transform 0.2s;
+  }
+
+  .projects li:hover .arrow {
+    transform: translate(2px, -2px);
+  }
+
+  .projects p:last-child {
+    color: var(--muted);
+  }
+
+  .extras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: 0 3rem;
+  }
+
+  .languages {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .languages div {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .languages dt {
+    font-weight: 600;
+    min-width: 5.5rem;
+  }
+
+  .languages dd {
+    color: var(--muted);
+  }
+</style>
