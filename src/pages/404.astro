@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro'
+import { routes, ui } from '../i18n'
+---
+
+<Base lang="fr" title="404 · Nicolas Burger" paths={routes.home} noindex>
+  <section class="container not-found">
+    <h1 class="code">404<span class="visually-hidden"> – {ui.notFound.fr}</span></h1>
+    <p>{ui.notFound.fr} <span lang="en">{ui.notFound.en}</span></p>
+    <p>
+      <a href={routes.home.fr}>{ui.backHome.fr}</a> · <a href={routes.home.en} lang="en">{ui.backHome.en}</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    padding-block: clamp(4rem, 14vw, 9rem);
+    display: grid;
+    gap: 1rem;
+  }
+
+  .code {
+    font-family: var(--font-serif);
+    font-size: clamp(5rem, 18vw, 10rem);
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  span {
+    display: block;
+    color: var(--muted);
+  }
+</style>

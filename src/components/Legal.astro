@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro'
+import { contact } from '../data/profile'
+import { routes, ui, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+
+const hasForm = Boolean(contact.formKey)
+const mail = `<a href="mailto:${contact.email}">${contact.email}</a>`
+const reach = {
+  fr: hasForm ? 'le <a href="#contact-title">formulaire de contact</a>' : mail,
+  en: hasForm ? 'the <a href="#contact-title">contact form</a>' : mail
+}
+const formData = {
+  fr: hasForm
+    ? ' Les messages envoyés via le formulaire de contact (nom, e-mail, message) sont transmis par le service Web3Forms jusqu’à ma boîte e-mail et servent uniquement à vous répondre.'
+    : '',
+  en: hasForm
+    ? ' Messages sent through the contact form (name, email, message) are relayed by the Web3Forms service to my inbox and are only used to reply to you.'
+    : ''
+}
+
+const sections = {
+  fr: [
+    {
+      title: 'Éditeur du site',
+      text: `Ce site est édité par Nicolas Burger, propriétaire du nom de domaine nicolasburger.fr. Contact : ${reach.fr}.`
+    },
+    { title: 'Développement', text: 'Le site a été conçu et développé par Nicolas Burger.' },
+    {
+      title: 'Hébergement',
+      text: 'Le site est hébergé par GitHub Pages, service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.'
+    },
+    {
+      title: 'Données personnelles',
+      text: `Ce site ne dépose aucun cookie et ne mesure pas son audience. Seul votre choix de thème (clair ou sombre) est conservé dans votre navigateur, sans jamais être transmis. Les polices sont servies depuis le site lui-même.${formData.fr}`
+    },
+    {
+      title: 'Propriété intellectuelle',
+      text: 'L’ensemble de ce site relève des législations française et internationale sur le droit d’auteur et la propriété intellectuelle.'
+    },
+    {
+      title: 'Limitation de responsabilité',
+      text: 'Ce site contient des liens vers d’autres sites qui n’ont pas été développés par Nicolas Burger. L’existence d’un lien ne constitue pas une validation de ces sites ou de leur contenu, et la responsabilité de Nicolas Burger ne saurait être engagée du fait des informations, opinions et recommandations formulées par des tiers.'
+    }
+  ],
+  en: [
+    {
+      title: 'Publisher',
+      text: `This site is published by Nicolas Burger, owner of the nicolasburger.fr domain name. Contact: ${reach.en}.`
+    },
+    { title: 'Development', text: 'The site was designed and developed by Nicolas Burger.' },
+    {
+      title: 'Hosting',
+      text: 'The site is hosted on GitHub Pages, a service of GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, United States.'
+    },
+    {
+      title: 'Personal data',
+      text: `This site sets no cookies and does not track visits. Only your theme choice (light or dark) is kept in your browser, and it is never sent anywhere. Fonts are served from the site itself.${formData.en}`
+    },
+    {
+      title: 'Intellectual property',
+      text: 'This entire site is governed by French and international copyright and intellectual property law.'
+    },
+    {
+      title: 'Limitation of liability',
+      text: 'This site links to other sites not developed by Nicolas Burger. A link does not constitute an endorsement of those sites or their content, and Nicolas Burger cannot be held liable for information, opinions or recommendations made by third parties.'
+    }
+  ]
+}
+---
+
+<Base lang={lang} title={`${ui.legal[lang]} · Nicolas Burger`} paths={routes.legal}>
+  <article class="container legal">
+    <h1>{ui.legal[lang]}</h1>
+    {
+      sections[lang].map((s) => (
+        <section>
+          <h2>{s.title}</h2>
+          <p set:html={s.text} />
+        </section>
+      ))
+    }
+  </article>
+</Base>
+
+<style>
+  .legal {
+    max-width: calc(var(--measure) + 2 * var(--gutter));
+    padding-block: clamp(3rem, 8vw, 5.5rem);
+    display: grid;
+    gap: 2rem;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 6vw, 3.25rem);
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.375rem;
+  }
+
+  p {
+    color: var(--muted);
+  }
+</style>
