@@ -238,13 +238,17 @@ const { lang } = Astro.props
     font-size: 0.9688rem;
   }
 
+  /* Flex rather than grid so the last row stretches instead of leaving empty cells */
   .projects {
+    display: flex;
+    flex-wrap: wrap;
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
   }
 
   .projects li {
+    flex: 1 1 19rem;
     display: grid;
     gap: 0.625rem;
     align-content: start;
@@ -266,12 +270,12 @@ const { lang } = Astro.props
     inset: 0;
   }
 
-  .projects li:has(a) {
+  .projects li:has(h3 a) {
     position: relative;
     transition: background 0.2s;
   }
 
-  .projects li:has(a):hover {
+  .projects li:has(h3 a):hover {
     background: var(--surface);
   }
 
