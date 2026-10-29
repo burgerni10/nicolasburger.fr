@@ -89,8 +89,8 @@ export const projects: Project[] = [
     name: same('Portraits 2 Passages'),
     meta: { fr: 'Co-fondateur · depuis 2018', en: 'Co-founder · since 2018' },
     text: {
-      fr: 'Lou, Diane et moi nous sommes rencontrés à l’UTT. Ensemble, nous organisons des voyages de proximité, en stop et sans argent : depuis 2021, des participants partent à la découverte de territoires méconnus (Mayenne, Indre, canton de Lucerne…) et de leurs habitants, et nous publions leurs récits en vidéo. Nous proposons aussi des formations au numérique responsable : frontières planétaires, économie du Donut, techno-diversité, Green IT, conception responsable.',
-      en: 'Lou, Diane and I met at UTT. Together, we organise local trips by hitchhiking and without money: since 2021, participants have set off to discover lesser-known places (Mayenne, Indre, the canton of Lucerne…) and the people who live there, and we publish their stories on video. We also offer training in responsible digital technology: planetary boundaries, Doughnut economics, techno-diversity, Green IT, responsible design.'
+      fr: 'Lou, Diane et moi nous sommes rencontrés à l’UTT. Ensemble, nous organisons des voyages de proximité, en stop et sans argent : depuis 2021, des participants partent à la découverte de territoires méconnus (Mayenne, Indre, canton de Lucerne…) et de leurs habitants, et nous publions leurs récits en vidéo.',
+      en: 'Lou, Diane and I met at UTT. Together, we organise local trips by hitchhiking and without money: since 2021, participants have set off to discover lesser-known places (Mayenne, Indre, the canton of Lucerne…) and the people who live there, and we publish their stories on video.'
     },
     url: 'https://portraits2passages.com'
   },
@@ -109,6 +109,14 @@ export const projects: Project[] = [
     text: {
       fr: 'Le cours « Conception de technologies numériques responsables » à Paris 1 Panthéon-Sorbonne et des enseignements au CNAM, en salle et en MOOC : frontières planétaires, théorie du Donut, ACV, effets rebonds, communs.',
       en: 'The “Designing responsible digital technologies” course at Paris 1 Panthéon-Sorbonne and classes at CNAM, in person and as MOOCs: planetary boundaries, Doughnut economics, LCA, rebound effects, the commons.'
+    }
+  },
+  {
+    name: { fr: 'Recherche', en: 'Research' },
+    meta: { fr: 'UTT · 2017 – 2021', en: 'UTT · 2017 – 2021' },
+    text: {
+      fr: 'Ma <a href="https://theses.hal.science/tel-03808701/">thèse</a> (UTT, 2020) étudie les compromis entre sécurité et disponibilité des systèmes embarqués communicants : dans un réseau de capteurs sans fil, la sécurité devient un curseur à régler, et j’ai modélisé ses paramètres en réseaux de Petri pour trouver un compromis acceptable. Mes recherches se sont ensuite tournées vers les impacts du numérique, en enrichissant le <em lang="en">Sustainable Computing Evaluation Framework</em> (SCEF), qui évalue la soutenabilité des projets numériques : classer les impacts directs, liés à l’usage et structurels sur tout le cycle de vie, faire de l’évaluation un outil d’apprentissage pour les chefs de projet, et comparer les impacts estimés aux données de terrain (<a href="https://assets.pubpub.org/aqxynqzk/21623537039273.pdf">article, <span lang="en">Computing within Limits</span> 2021</a>).',
+      en: 'My <a href="https://theses.hal.science/tel-03808701/">PhD thesis</a> (UTT, 2020, in French) studies the trade-offs between security and availability in communicating embedded systems: in a wireless sensor network, security becomes a slider to adjust, and I modelled its parameters with Petri nets to find an acceptable compromise. My research then turned to the impacts of digital technology, improving the Sustainable Computing Evaluation Framework (SCEF), which evaluates the sustainability of digital projects: classifying direct, enabling and structural impacts over the whole life cycle, making the evaluation a learning tool for project managers, and comparing estimated impacts with field data (<a href="https://assets.pubpub.org/aqxynqzk/21623537039273.pdf">paper, Computing within Limits 2021</a>).'
     }
   }
 ]
